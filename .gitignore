@@ -28,6 +28,9 @@ project.lock.json
 project.fragment.lock.json
 artifacts/
 
+# Publish folders
+[Pp]ublish/
+
 # ASP.NET Scaffolding
 ScaffoldingReadMe.txt
 
