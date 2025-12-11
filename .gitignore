@@ -55,3 +55,6 @@ CodeCoverage/
 *.VisualState.xml
 TestResult.xml
 nunit-*.xml
+GenealogyApi/.vs/
+.vs/GenealogyApi/v18/.futdcache.v2
+.vs/
