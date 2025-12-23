@@ -5,5 +5,7 @@ public static partial class WebApplicationBuilderExtensions
 {
     internal static WebApplication AddMinimalApis(this WebApplication app) => app
         .AddRootEndpoint()
-        .AddLoginEndpoint();
+        .AddLoginEndpoint()
+        .AddUserEndpoint()
+        .AddFamilyMembersEndpoint();
 }

@@ -58,3 +58,4 @@ nunit-*.xml
 GenealogyApi/.vs/
 .vs/GenealogyApi/v18/.futdcache.v2
 .vs/
+/GenealogyApi/Properties/launchSettings.json

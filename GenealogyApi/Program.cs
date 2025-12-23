@@ -37,10 +37,10 @@ builder.Services.AddDbContext<GenealogyDbContext>(options =>
 builder.Services.AddScoped<JwtSettings>(provider =>
 {
     return new JwtSettings(
-        builder.Configuration["Jwt:Issuer"]!,
-        builder.Configuration["Jwt:Audience"]!,
-        builder.Configuration["Jwt:Key"]!,
-        int.Parse(builder.Configuration["Jwt:ExpiryInMinutes"]!)
+        builder.Configuration["JwtIssuer"]!,
+        builder.Configuration["JwtAudience"]!,
+        builder.Configuration["JwtKey"]!,
+        int.Parse(builder.Configuration["JwtExpiryInMinutes"]!)
     );
 });
 builder.Services.AddScoped<IJwtService, JwtService>();
@@ -48,6 +48,9 @@ builder.Services.AddScoped<IDbInitializer, DbInitializer>();
 builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
 builder.Services.AddScoped<ILoginService, LoginService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IMemberRepository, MemberRepository>();
+builder.Services.AddScoped<IFamilyMemberService, FamilyMemberService>();
 
 builder.Services.AddAuthentication(options =>
 {
@@ -62,10 +65,10 @@ builder.Services.AddAuthentication(options =>
         ValidateAudience = true,
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
-        ValidIssuer = builder.Configuration["Jwt:Issuer"],
-        ValidAudience = builder.Configuration["Jwt:Audience"],
+        ValidIssuer = builder.Configuration["JwtIssuer"],
+        ValidAudience = builder.Configuration["JwtAudience"],
         IssuerSigningKey = new SymmetricSecurityKey(
-            Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!)),
+            Encoding.UTF8.GetBytes(builder.Configuration["JwtKey"]!)),
         ClockSkew = TimeSpan.Zero
     };
 });
@@ -88,14 +91,16 @@ builder.Services.AddSwaggerGen(options =>
         }
     });
 
-    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    options.AddSecurityDefinition("bearer", new OpenApiSecurityScheme
     {
-        Description = "JWT Authorization header using the Bearer scheme",
-        Name = "Authorization",
-        In = ParameterLocation.Header,
-        Type = SecuritySchemeType.ApiKey,
-        Scheme = "Bearer",
-        BearerFormat = "JWT"
+        Type = SecuritySchemeType.Http,
+        Scheme = "bearer",
+        BearerFormat = "JWT",
+        Description = "JWT Authorization header using the Bearer scheme."
+    });
+    options.AddSecurityRequirement(document => new OpenApiSecurityRequirement
+    {
+        [new OpenApiSecuritySchemeReference("bearer", document)] = []
     });
 });
 
@@ -107,7 +112,7 @@ builder.Services.AddCors(options =>
         // Development - luźniejsza polityka
         options.AddPolicy("DevPolicy", policy =>
         {
-            policy.WithOrigins("http://localhost:4200")
+            policy.WithOrigins("http://localhost:4200", "http://localhost:4201")
                   .AllowAnyHeader()
                   .AllowAnyMethod()
                   .AllowCredentials();
@@ -118,10 +123,7 @@ builder.Services.AddCors(options =>
         // Production - ścisła polityka
         options.AddPolicy("ProdPolicy", policy =>
         {
-            policy.WithOrigins(
-                      "https://yourdomain.com",
-                      "https://www.yourdomain.com"
-                  )
+            policy.WithOrigins(builder.Configuration["CorsDomain"])
                   .WithHeaders("Content-Type", "Authorization")
                   .WithMethods("GET", "POST", "PUT", "DELETE")
                   .AllowCredentials();
@@ -140,10 +142,11 @@ else
     app.UseCors("ProdPolicy");
 }
 
+app.UsePathBase("/api");
+
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.UsePathBase("/api");
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -155,10 +158,10 @@ if (app.Environment.IsDevelopment())
     });
 }
 
+app.UseHttpsRedirection();
 
 app.AddMinimalApis();
 
-app.UseHttpsRedirection();
 
 
 try

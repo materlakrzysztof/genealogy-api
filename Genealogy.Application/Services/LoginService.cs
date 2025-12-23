@@ -11,7 +11,13 @@ public class LoginService(IUserRepository userRepository, IJwtService jwtService
         var user = await userRepository.GetUserByUsername(username);
         if (user != null)
         {
-            if (passwordHasher.VerifyPassword(user.PasswordHash, password))
+            var passwordHash = await userRepository.GetPasswordForUser(user.Id);
+            if (passwordHash == null)
+            {
+                return string.Empty;
+            }
+
+            if (passwordHasher.VerifyPassword(passwordHash, password))
             {
                 return jwtService.GenerateToken(user);
             }

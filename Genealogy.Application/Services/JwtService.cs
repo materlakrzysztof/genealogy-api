@@ -56,11 +56,6 @@ public class JwtService(JwtSettings configuration) : IJwtService
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
 
-    public string GenerateToken(string username, IEnumerable<string> roles)
-    {
-        throw new NotImplementedException();
-    }
-
     public ClaimsPrincipal? ValidateToken(string token)
     {
         var tokenHandler = new JwtSecurityTokenHandler();

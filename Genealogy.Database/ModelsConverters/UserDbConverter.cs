@@ -10,6 +10,6 @@ internal static class UserDbConverter
         Role role = (Role)dbModel.Role;
         return new User(
             dbModel.Id,
-            dbModel.UserName, dbModel.PasswordHash, dbModel.CreateDate ?? DateTime.UtcNow, dbModel.Active, role);
+            dbModel.UserName, dbModel.CreateDate ?? DateTime.UtcNow, dbModel.Active, role);
     }
 }

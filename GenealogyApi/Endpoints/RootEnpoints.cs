@@ -9,6 +9,17 @@ internal static class RootEndpoint
 
     internal static WebApplication AddRootEndpoint(this WebApplication app)
     {
+
+        app.MapGet("/health", () =>
+        {
+
+            return Results.Ok();
+        })
+       .WithName("healthcheck")
+       .WithDescription("Returns ok")
+       .WithSummary("Returns ok")
+       .WithTags(SectionTitle); ;
+
         app.MapGet("/root", () =>
         {
             var machineName = Environment.MachineName;

@@ -9,8 +9,21 @@ public class UserRepository(GenealogyDbContext genealogyDb) : IUserRepository
 {
     public async Task<IEnumerable<User>> GetAllUsers()
     {
-        var userDbModels = await genealogyDb.Users.AsNoTracking().ToListAsync();
+        var userDbModels = await genealogyDb.Users.AsNoTracking().OrderBy(x => x.Id).ToListAsync();
         return userDbModels.Select(x => x.ToDomainModel());
+    }
+
+    public async Task<string?> GetPasswordForUser(int id)
+    {
+        var userDbModel = await genealogyDb.Users.FirstOrDefaultAsync(x => x.Id == id);
+        return userDbModel?.PasswordHash;
+    }
+
+    public async Task SetPasswordForUser(int id, string password)
+    {
+        var userDbModel = await genealogyDb.Users.FirstOrDefaultAsync(x => x.Id == id);
+        userDbModel?.PasswordHash = password;
+        await genealogyDb.SaveChangesAsync();
     }
 
     public async Task<User?> GetUserById(int id)

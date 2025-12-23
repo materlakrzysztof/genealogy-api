@@ -8,8 +8,6 @@
             "applicationUrl": "http://localhost:5181",
             "environmentVariables": {
                 "ASPNETCORE_ENVIRONMENT": "Development",
-                "POSGRESQL": "Host=ep-aged-night-a9emgez2.gwc.azure.neon.tech;Database=neondb;Username=neondb_owner;Password=npg_pAPNIU5e7GoS;SSL Mode=Require;Trust Server Certificate=true",
-                "Version": "0.0.1"
             }
         }
     }
