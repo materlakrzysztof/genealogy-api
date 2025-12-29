@@ -8,6 +8,13 @@
             "applicationUrl": "http://localhost:5181",
             "environmentVariables": {
                 "ASPNETCORE_ENVIRONMENT": "Development",
+                "POSGRESQL": "Host=ep-aged-night-a9emgez2.gwc.azure.neon.tech;Database=neondb;Username=neondb_owner;Password=npg_pAPNIU5e7GoS;SSL Mode=Require;Trust Server Certificate=true",
+                "Version": "0.0.1",
+                "JwtKey": "5bc61c62a7cba261f7a37c58e8c4c10ecd49e87f05ec4dd9525b2dac128df384",
+                "JwtIssuer": "genealogy-api",
+                "JwtAudience": "genealogy-web",
+                "JwtExpiryInMinutes": "60",
+                "CorsDomain": ""
             }
         }
     }

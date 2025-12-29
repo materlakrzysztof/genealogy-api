@@ -37,29 +37,7 @@ public class MemberRepository(GenealogyDbContext genealogyDb) : IMemberRepositor
         return member.ToDomainModel();
     }
 
-
-    //public async Task<IEnumerable<FamilyMember>> GetMembersWithRelationshipsAsync()
-    //{
-    //    return await _context.FamilyMembers
-    //        .Include(fm => fm.RelationshipsAsSource)
-    //        .ThenInclude(r => r.TargetMember)
-    //        .Include(fm => fm.RelationshipsAsTarget)
-    //        .ThenInclude(r => r.SourceMember)
-    //        .ToListAsync();
-    //}
-
-    //public async Task<FamilyMember?> GetMemberWithRelationshipsAsync(Guid id)
-    //{
-    //    return await _context.FamilyMembers
-    //        .Include(fm => fm.RelationshipsAsSource)
-    //        .ThenInclude(r => r.TargetMember)
-    //        .Include(fm => fm.RelationshipsAsTarget)
-    //        .ThenInclude(r => r.SourceMember)
-    //        .FirstOrDefaultAsync(fm => fm.Id == id);
-    //}
-
-
-    public async Task<IEnumerable<FamilyMember>> SearchAsync(string searchTerm, int take = 10, int skip = 0)
+    public async Task<IEnumerable<FamilyMemberSimple>> SearchAsync(string searchTerm, int take = 10, int skip = 0)
     {
         var lowerSearchTerm = searchTerm.ToLower();
 
@@ -71,8 +49,22 @@ public class MemberRepository(GenealogyDbContext genealogyDb) : IMemberRepositor
             .OrderBy(fm => fm.LastName)
             .ThenBy(fm => fm.FirstName)
             .Take(take)
-            .Select(x => x.ToDomainModel())
+            .Select(x => new FamilyMemberSimple(x.Id, x.FirstName, x.LastName, x.MaidenName, x.DateOfBirth, x.DateOfDeath))
             .AsNoTracking()
             .ToListAsync();
+    }
+
+    public async Task<FamilyMember> FindById(int id)
+    {
+        var member = await genealogyDb.FamilyMembers.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
+
+        return member?.ToDomainModel();
+    }
+
+    public async Task<FamilyMember> RemoveById(FamilyMember member)
+    {
+        genealogyDb.FamilyMembers.Remove(member.ToDbModel());
+        await genealogyDb.SaveChangesAsync();
+        return member;
     }
 }

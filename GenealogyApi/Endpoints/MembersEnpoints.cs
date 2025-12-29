@@ -18,10 +18,10 @@ internal static class MembersEnpoint
             LastName = request.LastName,
             MaidenName = request.MaidenName,
             Gender = request.Gender,
-            DateOfBirth = request.BirthDate,
-            PlaceOfBirth = request.BirthPlace,
-            DateOfDeath = request.DeathDate,
-            PlaceOfDeath = request.DeathPlace,
+            BirthDate = request.BirthDate,
+            BirthPlace = request.BirthPlace,
+            DeathDate = request.DeathDate,
+            DeathPlace = request.DeathPlace,
             Notes = request.Notes
         };
         return member;
@@ -51,10 +51,10 @@ internal static class MembersEnpoint
             return Results.Ok(member);
         })
 
-      .WithName("member update")
-      .WithDescription("create family member")
-      .WithTags(SectionTitle)
-      .RequireAuthorization();
+        .WithName("member update")
+        .WithDescription("create family member")
+        .WithTags(SectionTitle)
+        .RequireAuthorization();
 
         group.MapGet("", async ([FromQuery] string? term, [FromServices] IFamilyMemberService service) =>
         {
@@ -66,6 +66,31 @@ internal static class MembersEnpoint
        .WithName("members")
        .WithDescription("returns members")
        .WithTags(SectionTitle)
+       .RequireAuthorization();
+
+        group.MapGet("{id:int}", async (int id, [FromServices] IFamilyMemberService service) =>
+        {
+            var member = await service.Get(id);
+            return Results.Ok(member);
+        })
+
+        .WithName("member get")
+        .WithDescription("get family member")
+        .WithTags(SectionTitle);
+
+        group.MapDelete("{id:int}", async (int id, [FromServices] IFamilyMemberService service) =>
+        {
+            var member = await service.Remove(id);
+            if (member != null)
+            {
+                return Results.Ok(member);
+            }
+            return Results.BadRequest();
+        })
+
+        .WithName("member delete")
+        .WithDescription("delete family member")
+        .WithTags(SectionTitle)
        .RequireAuthorization();
 
         return app;

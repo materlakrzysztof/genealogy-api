@@ -16,10 +16,10 @@ internal static class FamilyMemberDbConverter
             Gender = gender,
             MaidenName = dbModel.MaidenName,
             MiddleName = dbModel.MiddleName,
-            DateOfBirth = dbModel.DateOfBirth,
-            DateOfDeath = dbModel.DateOfDeath,
-            PlaceOfDeath = dbModel.PlaceOfDeath,
-            PlaceOfBirth = dbModel.PlaceOfBirth,
+            BirthDate = dbModel.DateOfBirth,
+            DeathDate = dbModel.DateOfDeath,
+            DeathPlace = dbModel.PlaceOfDeath,
+            BirthPlace = dbModel.PlaceOfBirth,
             Notes = dbModel.Notes,
         };
     }
@@ -34,10 +34,10 @@ internal static class FamilyMemberDbConverter
             Gender = (int)model.Gender,
             MaidenName = model.MaidenName,
             MiddleName = model.MiddleName,
-            DateOfBirth = model.DateOfBirth,
-            DateOfDeath = model.DateOfDeath,
-            PlaceOfDeath = model.PlaceOfDeath,
-            PlaceOfBirth = model.PlaceOfBirth,
+            DateOfBirth = model.BirthDate,
+            DateOfDeath = model.DeathDate,
+            PlaceOfDeath = model.DeathPlace,
+            PlaceOfBirth = model.BirthPlace,
             Notes = model.Notes,
         };
     }
