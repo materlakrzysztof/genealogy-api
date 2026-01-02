@@ -27,7 +27,7 @@ public class FamilyMemberService(IMemberRepository memberRepository) : IFamilyMe
 
     public async Task<FamilyMember> Update(int id, FamilyMemberDetails details)
     {
-        var memberData = details as FamilyMember;
+        var memberData = details.Adapt<FamilyMember>();
         memberData.Id = id;
         var member = await memberRepository.Update(memberData);
         return member;
