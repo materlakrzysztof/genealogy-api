@@ -14,9 +14,9 @@ public class FamilyMemberService(IMemberRepository memberRepository) : IFamilyMe
         return member;
     }
 
-    public async Task<IEnumerable<FamilyMember>> GetMembers(string? searchTerm, int page = 1, int limit = 20)
+    public async Task<IEnumerable<FamilyMemberSimple>> GetMembers(string? searchTerm, int page = 1, int limit = 20)
     {
-        var skip = page > 0 ?  page - 1 : 0;
+        var skip = page > 0 ? page - 1 : 0;
 
         var term = searchTerm ?? string.Empty;
 
@@ -27,9 +27,28 @@ public class FamilyMemberService(IMemberRepository memberRepository) : IFamilyMe
 
     public async Task<FamilyMember> Update(int id, FamilyMemberDetails details)
     {
-        var memberData = details as FamilyMember;
+        var memberData = details.Adapt<FamilyMember>();
         memberData.Id = id;
         var member = await memberRepository.Update(memberData);
+        return member;
+    }
+
+    public async Task<FamilyMember> Remove(int id)
+    {
+        var member = await memberRepository.FindById(id);
+        if (member != null)
+        {
+            await memberRepository.RemoveById(member);
+
+            return member;
+        }
+        return null;
+
+    }
+
+    public async Task<FamilyMember> Get(int id)
+    {
+        var member = await memberRepository.FindById(id);
         return member;
     }
 }

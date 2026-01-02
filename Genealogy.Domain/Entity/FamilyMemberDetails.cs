@@ -7,10 +7,10 @@ public class FamilyMemberDetails
     public string? MiddleName { get; set; }
     public string? MaidenName { get; set; }
     public Gender Gender { get; set; }
-    public DateTime? DateOfBirth { get; set; }
-    public string? PlaceOfBirth { get; set; }
-    public DateTime? DateOfDeath { get; set; }
-    public string? PlaceOfDeath { get; set; }
+    public DateTime? BirthDate { get; set; }
+    public string? BirthPlace { get; set; }
+    public DateTime? DeathDate { get; set; }
+    public string? DeathPlace { get; set; }
 
     public string? Notes { get; set; }
 }

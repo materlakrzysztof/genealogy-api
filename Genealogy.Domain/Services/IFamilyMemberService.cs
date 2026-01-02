@@ -6,5 +6,8 @@ public interface IFamilyMemberService
 {
     Task<FamilyMember> CreateNew(FamilyMemberDetails details);
     Task<FamilyMember> Update(int id, FamilyMemberDetails details);
-    Task<IEnumerable<FamilyMember>> GetMembers(string? searchTerm, int page = 1, int limit = 20);
+
+    Task<FamilyMember> Get(int id);
+    Task<FamilyMember> Remove(int id);
+    Task<IEnumerable<FamilyMemberSimple>> GetMembers(string? searchTerm, int page = 1, int limit = 20);
 }
