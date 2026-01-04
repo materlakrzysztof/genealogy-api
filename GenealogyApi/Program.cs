@@ -107,40 +107,18 @@ builder.Services.AddSwaggerGen(options =>
 
 builder.Services.AddCors(options =>
 {
-    if (builder.Environment.IsDevelopment())
+    options.AddPolicy("CorsPolicy", policy =>
     {
-        // Development - luźniejsza polityka
-        options.AddPolicy("DevPolicy", policy =>
-        {
-            policy.WithOrigins("http://localhost:4200", "http://localhost:4201")
-                  .AllowAnyHeader()
-                  .AllowAnyMethod()
-                  .AllowCredentials();
-        });
-    }
-    else
-    {
-        // Production - ścisła polityka
-        options.AddPolicy("ProdPolicy", policy =>
-        {
-            policy.WithOrigins(builder.Configuration["CorsDomain"])
-                  .WithHeaders("Content-Type", "Authorization")
-                  .WithMethods("GET", "POST", "PUT", "DELETE")
-                  .AllowCredentials();
-        });
-    }
+        policy.WithOrigins(builder.Configuration["CorsDomain"])
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials();
+    });
 });
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
-{
-    app.UseCors("DevPolicy");
-}
-else
-{
-    app.UseCors("ProdPolicy");
-}
+app.UseCors("CorsPolicy");
 
 app.UsePathBase("/api");
 
